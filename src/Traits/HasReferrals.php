@@ -3,13 +3,13 @@
 namespace Atin\LaravelReferrals\Traits;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait HasReferrals
 {
     /**
      * Generate a referral link for the user.
-     *
-     * @return string
      */
     public function getReferralLink(): string
     {
@@ -18,8 +18,6 @@ trait HasReferrals
 
     /**
      * Check if the user is a referral for another user.
-     *
-     * @return bool
      */
     public function isReferral(): bool
     {
@@ -28,38 +26,31 @@ trait HasReferrals
 
     /**
      * Get the referrer for the user.
-     *
-     * @return User|null
      */
-    public function getReferrer(): ?User
+    public function referrer(): BelongsTo
     {
-        return $this->referrer_id ? User::find($this->referrer_id) : null;
+        return $this->belongsTo(User::class, 'referrer_id')
+            ->withTrashed();
     }
 
     /**
      * Get all referrals for the user.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getReferrals()
+    public function referrals(): HasMany
     {
-        return User::where('referrer_id', $this->id)->get();
+        return $this->hasMany(User::class, 'referrer_id');
     }
 
     /**
      * Get the total number of referrals for the user.
-     *
-     * @return int
      */
     public function getTotalReferrals(): int
     {
-        return $this->getReferrals()->count();
+        return $this->referrals()->count();
     }
 
     /**
      * Check if the user has any referrals.
-     *
-     * @return bool
      */
     public function hasReferrals(): bool
     {
