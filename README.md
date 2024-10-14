@@ -1,6 +1,6 @@
 # Install
 ### Trait
-Add ```HasReferrals``` trait to User model.
+Add `HasReferrals` trait to User model.
 
 ```php
 use Atin\LaravelReferrals\Traits\HasReferrals;
@@ -10,7 +10,7 @@ class User extends Authenticatable
     use HasReferrals;
 ```
 
-### Validate, Save and Forget the referrer ID
+### Validate, save and forget the referrer ID
 Now, modify your create method to use this validation rule. You'll need to retrieve the referrer ID from cookies and pass it into the validator:
 ```php
 namespace App\Actions\Fortify;
@@ -45,6 +45,11 @@ protected $middlewareGroups = [
     ],
     …
 ];
+```
+
+### Run Migrations
+```php
+php artisan migrate
 ```
 
 # Usage
