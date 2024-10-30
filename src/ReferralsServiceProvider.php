@@ -2,7 +2,9 @@
 
 namespace Atin\LaravelReferrals;
 
+use App\Models\User;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Auth\Events\Registered;
 
 class ReferralsServiceProvider extends ServiceProvider
 {
@@ -13,6 +15,16 @@ class ReferralsServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        \Event::listen(Registered::class, static function ($event) {
+            $referrerId = request()->cookie('referrer_id');
+
+            cookie()->queue(cookie()->forget('referrer_id'));
+
+            $event->user->forceFill([
+                'referrer_id' => User::where('id', $referrerId)->exists() ? $referrerId : null,
+            ])->save();
+        });
+
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $this->publishes([
