@@ -13,12 +13,9 @@ class User extends Authenticatable
 ### Register the Middleware
 Ensure that your `HandleReferral` middleware is properly registered in the `app/Http/Kernel.php` file.
 ```php
-protected $middlewareGroups = [
-    'web' => [
-        …
-        \Atin\LaravelReferrals\Middleware\HandleReferral::class, // Add your middleware here
-    ],
+protected $middleware = [
     …
+    \Atin\LaravelReferrals\Middleware\HandleReferral::class, // Add your middleware here
 ];
 ```
 
