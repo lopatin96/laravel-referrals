@@ -18,11 +18,11 @@ class ReferralsServiceProvider extends ServiceProvider
         \Event::listen(Registered::class, static function ($event) {
             $referrerId = request()->cookie('referrer_id');
 
-            cookie()->queue(cookie()->forget('referrer_id'));
-
             $event->user->forceFill([
                 'referrer_id' => User::where('id', $referrerId)->exists() ? $referrerId : null,
             ])->save();
+
+            cookie()->queue(cookie()->forget('referrer_id'));
         });
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
